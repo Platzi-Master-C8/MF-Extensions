@@ -1,16 +1,15 @@
-const path = require("path");
-const HtmlWebPackPlugin = require("html-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const path = require('path');
+const HtmlWebPackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
-
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
     entry: './src/index.jsx',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: "[name].js",
-        chunkFilename: "[name].bundle.js"
+        filename: '[name].js',
+        chunkFilename: '[name].bundle.js',
     },
     resolve: {
         extensions: ['.js', '.jsx'],
@@ -18,13 +17,15 @@ module.exports = {
             Components: path.resolve(__dirname, './src/components'),
             Constants: path.resolve(__dirname, './src/constants'),
             Pages: path.resolve(__dirname, './src/pages'),
-            Styles: path.resolve(__dirname, './src/style')
-        }
+            Styles: path.resolve(__dirname, './src/style'),
+            Routes: path.resolve(__dirname, './src/routes'),
+        },
     },
     devServer: {
         port: '3000',
         hot: true,
-        watchFiles: ["./src/**"]
+        watchFiles: ['./src/**'],
+        historyApiFallback: true,
     },
 
     optimization: {
@@ -37,8 +38,8 @@ module.exports = {
                 reactVendor: {
                     test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
                     chunks: 'all',
-                    name: "react-vendor",
-                    filename: "assets/common.[chunkhash].js",
+                    name: 'react-vendor',
+                    filename: 'assets/common.[chunkhash].js',
                     reuseExistingChunk: true,
                     enforce: true,
                     priority: 20,
@@ -50,9 +51,9 @@ module.exports = {
                     reuseExistingChunk: true,
                     enforce: true,
                     priority: 10,
-                }
-            }
-        }
+                },
+            },
+        },
     },
     module: {
         rules: [
@@ -62,45 +63,41 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['@babel/preset-env', '@babel/preset-react']
-                    }
-                }
+                        presets: ['@babel/preset-env', '@babel/preset-react'],
+                    },
+                },
             },
             {
                 test: /\.html$/,
                 use: [
                     {
-                        loader: "html-loader"
-                    }
-                ]
-            },
-            {
-                test: /\.s[ac]ss$/i,
-                use: [
-                    MiniCssExtractPlugin.loader,
-                    "css-loader",
-                    "sass-loader",
+                        loader: 'html-loader',
+                    },
                 ],
             },
             {
-                test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
-                type: "asset",
+                test: /\.s[ac]ss$/i,
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
             },
-        ]
+            {
+                test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
+                type: 'asset',
+            },
+        ],
     },
     plugins: [
         new HtmlWebPackPlugin({
-            template: "./public/index.html",
-            filename: "index.html"
+            template: './public/index.html',
+            filename: 'index.html',
         }),
         new MiniCssExtractPlugin({
-            filename: "assets/css/[name].css",
+            filename: 'assets/css/[name].css',
         }),
         new CleanWebpackPlugin(),
         new BundleAnalyzerPlugin({
             // generateStatsFile: true,
             analyzerMode: 'disabled',
-            generateStatsFile: true
-        })
-    ]
-}
+            generateStatsFile: true,
+        }),
+    ],
+};
