@@ -6,7 +6,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Container from '@mui/material/Container';
 
-import Button from 'Components/Button';
+import Button from 'Components/atoms/Button';
 
 import { makeStyles } from '@mui/styles';
 
