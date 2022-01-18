@@ -1,10 +1,7 @@
 import React from 'react';
-import { ThemeProvider } from '@mui/material';
-
-import { THEME } from 'Constants/theme.constant';
-
 import Routes from 'Routes';
-
+import { THEME } from 'Constants/theme.constant';
+import { ThemeProvider } from '@mui/material';
 import 'Styles/style.scss';
 
 const App = () => (
