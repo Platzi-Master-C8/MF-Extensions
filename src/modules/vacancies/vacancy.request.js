@@ -28,6 +28,7 @@ async function postVacancy(vacancy) {
 
 async function getVacancies() {
   let response = null;
+  console.log('entrooo')
   const { url, method } = endPoints.getVacancies;
   response = await getAxiosRequest({
     method,
@@ -47,7 +48,7 @@ async function getVacancy(userId, vacantId) {
   });
   const { data } = response;
   if (!data) throw SystemException("Error getting vacancy", "error");  
-  return data.job_vacants;
+  return data.vacant;
 }
 
 async function deleteVacancy(userId, vacantId) {
