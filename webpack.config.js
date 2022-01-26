@@ -1,28 +1,8 @@
 const path = require('path');
-const webpack = require("webpack")
-const dotenv = require("dotenv");
-const fs = require("fs");
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-
-const env = dotenv.config().parsed;
-const currentPath = path.join(__dirname);
-
-const basePath = `${currentPath  }/.env`;
-
-const envPath = `${basePath  }.${  env.ENVIRONMENT}`;
-
-const finalPath = fs.existsSync(envPath) ? envPath : basePath;
-
-const fileEnv = dotenv.config({ path: finalPath }).parsed;
-
-const envKeys = Object.keys(fileEnv).reduce((prev, next) => {
-    const tempPrev = prev
-    tempPrev[`process.env.${next}`] = JSON.stringify(fileEnv[next]);
-    return tempPrev;
-  }, {});
 
 module.exports = {
     entry: './src/index.jsx',
@@ -106,7 +86,6 @@ module.exports = {
         ],
     },
     plugins: [
-        new webpack.DefinePlugin(envKeys),
         new HtmlWebPackPlugin({
             template: './public/index.html',
             filename: 'index.html',
