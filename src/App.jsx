@@ -1,18 +1,22 @@
 import React from 'react';
-import { ThemeProvider } from '@mui/material';
+import { useRoutes } from 'react-router-dom';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
-import { THEME } from 'Constants/theme.constant';
+import { CssBaseline } from '@mui/material';
+import ThemeProvider from './theme/ThemeProvider';
+import routes from './routes';
 
-import Routes from 'Routes';
+const App = () => {
+  const content = useRoutes(routes);
 
-import 'Styles/style.scss';
-
-const App = () => (
-    <React.StrictMode>
-        <ThemeProvider theme={THEME}>
-            <Routes />
-        </ThemeProvider>
-    </React.StrictMode>
-);
-
+  return (
+    <ThemeProvider>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <CssBaseline />
+        {content}
+      </LocalizationProvider>
+    </ThemeProvider>
+  );
+};
 export default App;
