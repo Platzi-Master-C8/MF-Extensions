@@ -1,5 +1,7 @@
+/* eslint-disable no-underscore-dangle */
 // @ts-ignore-start
 import { Chart } from 'react-chartjs-2';
+
 function draw() {
   const { ctx } = this._chart;
   const vm = this._view;
