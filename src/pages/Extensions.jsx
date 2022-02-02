@@ -8,7 +8,6 @@ import VacancyList from 'Components/templates/VacancyList';
 import { makeStyles } from '@mui/styles';
 
 import 'Styles/themeExample.scss';
-import { COLORS } from 'Constants/colors.constants';
 
 const useStyle = makeStyles({
     colorContent: {
