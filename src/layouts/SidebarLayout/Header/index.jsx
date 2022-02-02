@@ -7,7 +7,6 @@ import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
 
 import Logo from '../../../components/atoms/Logo';
 import { SidebarContext } from '../../../contexts/SidebarContext';
-import HeaderMenu from './Menu';
 import HeaderButtons from './Buttons';
 import HeaderUserbox from './Userbox';
 
@@ -39,12 +38,8 @@ const Header = () => {
                 <Hidden lgUp>
                     <Logo />
                 </Hidden>
-                <Hidden mdDown>
-                    <HeaderMenu />
-                </Hidden>
             </Box>
             <Box display="flex" alignItems="center">
-                <HeaderButtons />
                 <HeaderUserbox />
                 <Hidden lgUp>
                     <Tooltip arrow title="Toggle Menu">

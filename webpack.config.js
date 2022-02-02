@@ -1,8 +1,30 @@
+/* eslint-disable no-param-reassign */
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const webpack = require("webpack");
+const dotenv = require("dotenv");
+const fs = require("fs");
+
+
+
+const env = dotenv.config().parsed;
+const currentPath = path.join(__dirname);
+
+const basePath = `${currentPath  }/.env`;
+
+const envPath = `${basePath  }.${  env.ENVIRONMENT}`;
+
+const finalPath = fs.existsSync(envPath) ? envPath : basePath;
+
+const fileEnv = dotenv.config({ path: finalPath }).parsed;
+
+const envKeys = Object.keys(fileEnv).reduce((prev, next) => {
+  prev[`process.env.${next}`] = JSON.stringify(fileEnv[next]);
+  return prev;
+}, {});
 
 module.exports = {
     entry: './src/index.jsx',
@@ -22,7 +44,7 @@ module.exports = {
         },
     },
     devServer: {
-        port: '3000',
+        port: '3001',
         hot: true,
         watchFiles: ['./src/**'],
         historyApiFallback: true,
@@ -86,6 +108,7 @@ module.exports = {
         ],
     },
     plugins: [
+        new webpack.DefinePlugin(envKeys),
         new HtmlWebPackPlugin({
             template: './public/index.html',
             filename: 'index.html',
