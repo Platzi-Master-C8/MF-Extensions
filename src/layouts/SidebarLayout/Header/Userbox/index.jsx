@@ -1,27 +1,11 @@
 import React, { useRef, useState } from 'react';
 
-import { NavLink } from 'react-router-dom';
-
-import {
-    Avatar,
-    Box,
-    Button,
-    Divider,
-    Hidden,
-    lighten,
-    List,
-    ListItem,
-    ListItemText,
-    Popover,
-    Typography,
-} from '@mui/material';
-
-import InboxTwoToneIcon from '@mui/icons-material/InboxTwoTone';
+import { Avatar, Box, Button, Divider, Hidden, lighten, Popover, Typography } from '@mui/material';
+import { useAuth0 } from '@auth0/auth0-react';
 import { styled } from '@mui/material/styles';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
-import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
-import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
-import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
+import LogoutButton from './logout-button';
+import LoginButton from './login-button';
 
 const UserBoxButton = styled(Button)(
     ({ theme }) => `
@@ -59,13 +43,14 @@ const UserBoxDescription = styled(Typography)(
 );
 
 const HeaderUserbox = () => {
-    const user = {
-        name: 'User',
-        avatar: '',
-        jobtitle: 'Profession',
-    };
-
     const ref = useRef(null);
+    const { isAuthenticated, user: currentUser } = useAuth0();
+   
+    const user = {
+        name: currentUser ? currentUser.name : '',
+        avatar: currentUser ? currentUser.picture : '',
+        jobtitle: currentUser ? currentUser.email : '',
+    };
     const [isOpen, setOpen] = useState(false);
 
     const handleOpen = () => {
@@ -79,7 +64,7 @@ const HeaderUserbox = () => {
     return (
         <React.Fragment>
             <UserBoxButton color="secondary" ref={ref} onClick={handleOpen}>
-                <Avatar variant="rounded" alt={user.name} />
+                <Avatar variant="rounded" alt={user.name} src={user.avatar} />
                 <Hidden mdDown>
                     <UserBoxText>
                         <UserBoxLabel variant="body1">{user.name}</UserBoxLabel>
@@ -111,27 +96,8 @@ const HeaderUserbox = () => {
                     </UserBoxText>
                 </MenuUserBox>
                 <Divider sx={{ mb: 0 }} />
-                <List sx={{ p: 1 }} component="nav">
-                    <ListItem button to="/management/profile/details" component={NavLink}>
-                        <AccountBoxTwoToneIcon fontSize="small" />
-                        <ListItemText primary="My Profile" />
-                    </ListItem>
-                    <ListItem button to="/dashboards/messenger" component={NavLink}>
-                        <InboxTwoToneIcon fontSize="small" />
-                        <ListItemText primary="Messenger" />
-                    </ListItem>
-                    <ListItem button to="/management/profile/settings" component={NavLink}>
-                        <AccountTreeTwoToneIcon fontSize="small" />
-                        <ListItemText primary="Account Settings" />
-                    </ListItem>
-                </List>
                 <Divider />
-                <Box sx={{ m: 1 }}>
-                    <Button color="primary" fullWidth>
-                        <LockOpenTwoToneIcon sx={{ mr: 1 }} />
-                        Sign out
-                    </Button>
-                </Box>
+                {isAuthenticated ? <LogoutButton /> : <LoginButton />}
             </Popover>
         </React.Fragment>
     );

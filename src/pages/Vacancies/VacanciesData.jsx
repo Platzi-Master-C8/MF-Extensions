@@ -1,19 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { Link, Card } from '@mui/material';
+import { Card, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { getVacancies } from '../../modules/vacancies/vacancy.request';
+import { useAuth0 } from '@auth0/auth0-react';
+import { deleteVacancy, getVacancies } from '../../modules/vacancies/vacancy.request';
 
-const VacanciesData = () => {
+const VacanciesData = ({ selectVacancy }) => {
     const [vacancies, setVacancies] = useState([]);
-
+    const { getAccessTokenSilently, user } = useAuth0();
+    console.log(user);
     useEffect(() => {
         const getVacanciesData = async () => {
-            const currentVacancies = await getVacancies();
+            const token = await getAccessTokenSilently();
+            const currentVacancies = await getVacancies(token);
             setVacancies(currentVacancies);
         };
         getVacanciesData();
     }, []);
+
+    const deleteVacancyAction = async (selectedVacancy) => {
+        try {
+            console.log(user);
+            const token = await getAccessTokenSilently();
+            await deleteVacancy(1, selectedVacancy.id, token);
+            const currentVacancies = vacancies.filter((vacancy) => vacancy.id !== selectedVacancy.id);
+            setVacancies(currentVacancies);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const columns = [
         { field: 'id', headerName: 'ID' },
@@ -27,13 +43,22 @@ const VacanciesData = () => {
             field: 'Actions',
             renderCell: (cellValues) => {
                 return (
-                    <Link
-                        href={`/vacancies/${cellValues.row.id}`}
-                        key={cellValues.row.id}
-                        to={`/vacancies/${cellValues.row.id}`}
-                    >
-                        <EditIcon />{' '}
-                    </Link>
+                    <React.Fragment>
+                        <IconButton
+                            onClick={() => {
+                                selectVacancy(cellValues.row);
+                            }}
+                        >
+                            <EditIcon />
+                        </IconButton>
+                        <IconButton
+                            onClick={() => {
+                                deleteVacancyAction(cellValues.row);
+                            }}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                    </React.Fragment>
                 );
             },
         },

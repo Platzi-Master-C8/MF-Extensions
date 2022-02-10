@@ -1,27 +1,25 @@
-import { Container } from '@mui/material';
+import { Container, Box } from '@mui/material';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { Box } from '@mui/material';
+
 import React from 'react';
 
 const PageTitle = styled(Box)(
-  ({ theme }) => `
+    ({ theme }) => `
         padding: ${theme.spacing(4, 0)};
-`
+`,
 );
 
 const PageTitleWrapper = ({ children }) => {
-  return (
-    <>
-      <PageTitle>
-        <Container maxWidth="lg">{children}</Container>
-      </PageTitle>
-    </>
-  );
+    return (
+        <PageTitle>
+            <Container maxWidth="lg">{children}</Container>
+        </PageTitle>
+    );
 };
 
 PageTitleWrapper.propTypes = {
-  children: PropTypes.node.isRequired
+    children: PropTypes.node.isRequired,
 };
 
 export default PageTitleWrapper;

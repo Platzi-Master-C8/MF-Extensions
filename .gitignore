@@ -25,7 +25,7 @@ chrome-user-data
 *.swo
 dist
 .eslintcache
-
+.env
 packages/react-devtools-core/dist
 packages/react-devtools-extensions/chrome/build
 packages/react-devtools-extensions/chrome/*.crx
@@ -38,4 +38,3 @@ packages/react-devtools-extensions/.tempUserDataDir
 packages/react-devtools-inline/dist
 packages/react-devtools-shell/dist
 packages/react-devtools-timeline/dist
-.env

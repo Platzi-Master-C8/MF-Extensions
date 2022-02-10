@@ -17,6 +17,7 @@
         "@mui/material": "^5.3.1"
     },
     "dependencies": {
+        "@auth0/auth0-react": "^1.9.0",
         "@emotion/react": "latest",
         "@emotion/styled": "latest",
         "@mui/icons-material": "^5.3.0",
