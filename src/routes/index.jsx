@@ -19,8 +19,6 @@ const Loader = (Component) => (props) =>
 const Vacancy = Loader(lazy(() => import('../pages/Vacancies/Vacancy')));
 const Vacancies = Loader(lazy(() => import('../pages/Vacancies')));
 const NotFound = Loader(lazy(() => import('../pages/Status/Status404')));
-const SingleVacancy = Loader(
-    lazy(() => import("../pages/Vacancies/single")));
 const routes = [
     {
         path: '/',
@@ -40,7 +38,6 @@ const routes = [
                 path: '*',
                 element: <NotFound />,
             },
-
         ],
     },
 ];
