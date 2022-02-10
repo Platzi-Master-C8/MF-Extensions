@@ -1,7 +1,6 @@
 import Axios from 'axios';
 import SystemException from '../SystemException';
 
-
 function handle404Error(error) {
   if (Number(error.code) === 404 || error.request?.status === 0) {
     throw SystemException('Trying request was not found', 'error', 404);
@@ -41,13 +40,12 @@ async function getAxiosRequest(
   token,
 ){
   try {
-    const tempToken = `Bearer ${localStorage.getItem("token")}`;
-    if (token || tempToken) {
+    if (token) {
       return await Axios.request({
         ...config,
         headers: {
           ...(config.headers ?? {}),
-          Authorization: token || tempToken,
+          Authorization: `Bearer ${token}`,
         },
       });
     }

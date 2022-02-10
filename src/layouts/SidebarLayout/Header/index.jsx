@@ -7,7 +7,6 @@ import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
 
 import Logo from '../../../components/atoms/Logo';
 import { SidebarContext } from '../../../contexts/SidebarContext';
-import HeaderButtons from './Buttons';
 import HeaderUserbox from './Userbox';
 
 const HeaderWrapper = styled(Box)(
