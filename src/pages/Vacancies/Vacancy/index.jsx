@@ -1,17 +1,26 @@
 /* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import { useParams } from 'react-router-dom';
-import { Box, InputLabel, Input, FormHelperText, FormControl, Button } from '@mui/material';
+import {
+    Typography,
+    Container,
+    Box,
+    InputLabel,
+    Input,
+    FormHelperText,
+    FormControl,
+    Button,
+    IconButton,
+} from '@mui/material';
 import { StarRate } from '@mui/icons-material';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { getVacancy } from '../../../modules/vacancies/vacancy.request';
 import useStyles from './vacancy.styles';
 
-const Vacancy = () => {
+const Vacancy = ({ vacancy: selectedVacancy, selectVacancy }) => {
     const params = useParams();
     const classes = useStyles();
-    const [vacancy, setVacancy] = useState(null);
+    const [vacancy, setVacancy] = useState(selectedVacancy);
     const [formData, setFormData] = useState({});
 
     useEffect(() => {
@@ -45,6 +54,13 @@ const Vacancy = () => {
     if (vacancy) {
         return (
             <Container maxWidth="md">
+                <IconButton
+                    onClick={() => {
+                        selectVacancy(null);
+                    }}
+                >
+                    <ArrowBackIosIcon />
+                </IconButton>
                 <Typography variant="h1">{vacancy.title}</Typography>
                 <Button variant="text" href={vacancy.link}>
                     {vacancy.link}

@@ -10,12 +10,15 @@ import App from './App';
 
 // import 'nprogress/nprogress.css';
 import { SidebarProvider } from './contexts/SidebarContext';
+import Auth0ProviderWithHistory from './auth/auth0-provider-with-history';
 
 ReactDOM.render(
     <HelmetProvider>
         <SidebarProvider>
             <BrowserRouter>
-                <App />
+                <Auth0ProviderWithHistory>
+                    <App />
+                </Auth0ProviderWithHistory>
             </BrowserRouter>
         </SidebarProvider>
     </HelmetProvider>,

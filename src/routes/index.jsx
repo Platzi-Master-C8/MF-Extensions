@@ -7,7 +7,6 @@ import { Navigate } from 'react-router-dom';
 
 import SuspenseLoader from '../components/atoms/SuspenseLoader';
 import SidebarLayout from '../layouts/SidebarLayout';
-import BaseLayout from '../layouts/BaseLayout';
 
 const Loader = (Component) => (props) =>
     (
@@ -15,18 +14,9 @@ const Loader = (Component) => (props) =>
             <Component {...props} />{' '}
         </Suspense>
     );
-// Pages
 
-// const Vacancy = Loader(lazy(() =>
-//     import ('../pages/vacancies/[vacancyId]')));
-// const Vacancy = Loader(lazy(() =>
-//     import ('../pages/vacancies/[vacancyId]')));
+const Vacancy = Loader(lazy(() => import('../pages/Vacancies/Vacancy')));
 const Vacancies = Loader(lazy(() => import('../pages/Vacancies')));
-const Status404 = Loader(lazy(() => import('../pages/Status/Status404')));
-const Status500 = Loader(lazy(() => import('../pages/Status/Status500')));
-const Dashboard = Loader(lazy(() => import('../dashboard')));
-const StatusComingSoon = Loader(lazy(() => import('../pages/Status/ComingSoon')));
-const StatusMaintenance = Loader(lazy(() => import('../pages/Status/Maintenance')));
 const NotFound = Loader(lazy(() => import('../pages/Status/Status404')));
 
 const routes = [
@@ -35,12 +25,18 @@ const routes = [
         element: <SidebarLayout />,
         children: [
             {
-                path: 'dashboard',
-                element: <Dashboard />,
+                path: '/vacancies',
+                element: <Vacancies />,
+                children: [
+                    {
+                        path: '/vacancies/:id',
+                        element: <Vacancy />,
+                    },
+                ],
             },
             {
-                path: 'vacancies',
-                element: <Vacancies />,
+                path: '*',
+                element: <NotFound />,
             },
         ],
     },
