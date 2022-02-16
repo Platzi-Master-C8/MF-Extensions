@@ -4,28 +4,33 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useAuth0 } from '@auth0/auth0-react';
+import { Link } from 'react-router-dom';
 import { deleteVacancy, getVacancies } from '../../modules/vacancies/vacancy.request';
 
-const VacanciesData = ({ selectVacancy }) => {
+const VacanciesData = () => {
     const [vacancies, setVacancies] = useState([]);
-    const { getAccessTokenSilently, user } = useAuth0();
-    console.log(user);
+    const [isLoading, setIsloading] = useState(false);
+    const { getAccessTokenSilently } = useAuth0();
+
     useEffect(() => {
         const getVacanciesData = async () => {
+            setIsloading(true);
             const token = await getAccessTokenSilently();
             const currentVacancies = await getVacancies(token);
             setVacancies(currentVacancies);
+            setIsloading(false);
         };
         getVacanciesData();
-    }, []);
+    }, [getAccessTokenSilently]);
 
     const deleteVacancyAction = async (selectedVacancy) => {
         try {
-            console.log(user);
+            setIsloading(true);
             const token = await getAccessTokenSilently();
             await deleteVacancy(1, selectedVacancy.id, token);
             const currentVacancies = vacancies.filter((vacancy) => vacancy.id !== selectedVacancy.id);
             setVacancies(currentVacancies);
+            setIsloading(false);
         } catch (error) {
             console.log(error);
         }
@@ -44,13 +49,13 @@ const VacanciesData = ({ selectVacancy }) => {
             renderCell: (cellValues) => {
                 return (
                     <React.Fragment>
-                        <IconButton
-                            onClick={() => {
-                                selectVacancy(cellValues.row);
-                            }}
+                        <Link
+                            href={`/vacancies/${cellValues.row.id}`}
+                            key={cellValues.row.id}
+                            to={`/vacancies/${cellValues.row.id}`}
                         >
                             <EditIcon />
-                        </IconButton>
+                        </Link>
                         <IconButton
                             onClick={() => {
                                 deleteVacancyAction(cellValues.row);
@@ -81,6 +86,7 @@ const VacanciesData = ({ selectVacancy }) => {
                     checkboxSelection
                     onCellClick={handleCellClick}
                     onRowClick={handleRowClick}
+                    loading={isLoading}
                     components={{
                         Toolbar: GridToolbar,
                     }}

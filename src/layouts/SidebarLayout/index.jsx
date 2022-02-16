@@ -1,12 +1,10 @@
+import React, { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
-import { Box, Container, Grid } from '@mui/material';
+import { Box } from '@mui/material';
 import { Outlet } from 'react-router-dom';
-import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import Sidebar from './Sidebar';
 import Header from './Header';
-import PageTitleWrapper from '../../components/atoms/PageTitleWrapper';
-import PageHeader from '../../components/organisms/PageHeader';
 
 const MainWrapper = styled(Box)(
     ({ theme }) => `
@@ -29,31 +27,24 @@ const MainContent = styled(Box)(
 );
 
 const SidebarLayout = () => {
-    const { isAuthenticated } = useAuth0();
+    const { isAuthenticated, loginWithRedirect } = useAuth0();
+
+    useEffect(() => {
+        if (!isAuthenticated) {
+            loginWithRedirect();
+        }
+    }, [isAuthenticated, loginWithRedirect]);
+
+    if (!isAuthenticated) {
+        return null;
+    }
+
     return (
         <React.Fragment>
             <Sidebar />
             <MainWrapper>
                 <Header />
                 <MainContent>
-                    {!isAuthenticated && (
-                        <div>
-                            <PageTitleWrapper>
-                                <PageHeader />
-                            </PageTitleWrapper>
-                            <Container maxWidth="lg">
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="center"
-                                    alignItems="stretch"
-                                    spacing={3}
-                                >
-                                    <div style={{ height: 700, width: '100%' }}>Please login</div>
-                                </Grid>
-                            </Container>
-                        </div>
-                    )}
                     <Outlet />
                 </MainContent>
             </MainWrapper>

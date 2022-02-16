@@ -29,6 +29,7 @@ const envKeys = Object.keys(fileEnv).reduce((prev, next) => {
 module.exports = {
     entry: './src/index.jsx',
     output: {
+        publicPath: '/',
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].js',
         chunkFilename: '[name].bundle.js',
