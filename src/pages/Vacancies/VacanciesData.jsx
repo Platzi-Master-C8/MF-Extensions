@@ -27,7 +27,7 @@ const VacanciesData = () => {
         try {
             setIsloading(true);
             const token = await getAccessTokenSilently();
-            await deleteVacancy(1, selectedVacancy.id, token);
+            await deleteVacancy(selectedVacancy.id, token);
             const currentVacancies = vacancies.filter((vacancy) => vacancy.id !== selectedVacancy.id);
             setVacancies(currentVacancies);
             setIsloading(false);
