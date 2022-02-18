@@ -33,6 +33,9 @@ const SidebarLayout = () => {
         if (!isAuthenticated) {
             loginWithRedirect();
         }
+        if (!window.location.href.includes('vacancies')) {
+            window.location.href = '/vacancies';
+        }
     }, [isAuthenticated, loginWithRedirect]);
 
     if (!isAuthenticated) {

@@ -16,7 +16,7 @@ const App = () => {
     if (isLoading) {
         return <SuspenseLoader />;
     }
-    
+
     return (
         <ThemeProvider>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
