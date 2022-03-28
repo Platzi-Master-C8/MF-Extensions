@@ -3,19 +3,21 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Typography, Container, Box, Button, TextField, Snackbar } from '@mui/material';
+import { Typography, Container, Box, Button, TextField } from '@mui/material';
 import { StarRate } from '@mui/icons-material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { getVacancy, updateVacancy } from '../../../modules/vacancies/vacancy.request';
 import useStyles from './vacancy.styles';
 import SuspenseLoader from '../../../components/atoms/SuspenseLoader';
-import { StarRating } from '../../../components/organisms/StarRating/StarRating';
+import CustomizedSnackbars from '../../../components/organisms/CustomSnackbar/CustomSnackbar';
+import { validateObj } from '../../../utils/validations/inputValidation';
 
 const Vacancy = () => {
     const params = useParams();
     const classes = useStyles();
     const [isLoading, setIsloading] = useState(false);
-    const [alert, setAlert] = useState(false);
+    const [alert, setAlert] = useState({ message: '', type: 'error' });
+    const [open, setOpen] = useState(false);
     const { getAccessTokenSilently } = useAuth0();
     const [vacancy, setVacancy] = useState();
     const [formData, setFormData] = useState({
@@ -51,29 +53,53 @@ const Vacancy = () => {
         getVacancyData();
     }, [getAccessTokenSilently, params.vacancyId]);
 
+    const activeAlert = (message, type) => {
+        setAlert({ message, type });
+        setOpen(true);
+    };
+
+    const ShowValidationErrors = (validations) => {
+        let currentValidations = 'You have the follow errors: \n\r';
+        validations.forEach((validation) => {
+            currentValidations += `${validation.key}: ${validation.message}. \n\r`;
+        });
+        activeAlert(currentValidations, 'error');
+    };
+
+    const setValidateVacancy = async (validation, vacancyToCreate) => {
+        try {
+            if (validation === 'ok') {
+                const token = await getAccessTokenSilently();
+                const result = await updateVacancy(params.vacancyId, vacancyToCreate, token);
+                if (result) {
+                    activeAlert('The vacancy  was updated successfully', 'success');
+                }
+            } else {
+                ShowValidationErrors(validation);
+            }
+        } catch (error) {
+            activeAlert(error, 'error');
+        }
+    };
+
     const updateVacancyData = async () => {
         setIsloading(true);
         try {
-            const token = await getAccessTokenSilently();
-            const vacancyToUpdate = { ...vacancy, ...formData, remote: false, status: 'done' };
+            const vacancyToUpdate = { ...vacancy, ...formData, remote: false };
+            console.log(vacancyToUpdate);
             const { createdAt, updatedAt, id, user_id, ...curerntVacancy } = vacancyToUpdate;
-            await updateVacancy(params.vacancyId, curerntVacancy, token);
+            const validation = validateObj('vacancySchema', vacancyToUpdate);
+            setValidateVacancy(validation, curerntVacancy);
         } catch (error) {
             setAlert(error.message);
         }
         setIsloading(false);
     };
 
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setAlert(null);
-    };
-
     const handleChange = (event) => {
         event.preventDefault();
-        setFormData({ ...formData, [event.target.name]: event.target.value });
+        const newVacancy = { ...formData, [event.target.name]: event.target.value };
+        setFormData(newVacancy);
     };
 
     const renderBackButton = () => {
@@ -189,7 +215,7 @@ const Vacancy = () => {
                     </Box>
                 </Box>
 
-                <Snackbar open={alert} autoHideDuration={6000} onClose={handleClose} message={alert} />
+                <CustomizedSnackbars type={alert.type} message={alert.message} status={open} resetOpen={setOpen} />
             </Container>
         );
     }
